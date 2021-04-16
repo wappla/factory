@@ -1,6 +1,6 @@
 {
     "name": "@dashdot/factory",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "A simple factory implementation for any persistance.",
     "license": "MIT",
     "files": [

@@ -1,5 +1,8 @@
 # Dashdot Factory
 
+![build](https://github.com/wappla/factory/actions/workflows/on_push_master.yml/badge.svg?branch=main)
+[![codecov](https://codecov.io/gh/wappla/factory/branch/main/graph/badge.svg?token=DRM4BZC40Z)](https://codecov.io/gh/wappla/factory)
+
 A simple factory implementation for any persistance.
 
 ## Usage

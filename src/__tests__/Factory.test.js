@@ -86,3 +86,17 @@ test('if factories return correct instances and persist correctly.', async () =>
     expect(dbPost.title).toEqual(post.title)
     expect(dbPost.content).toEqual(post.content)
 })
+
+test('if factories throws error when make method is not implemented.', async () => {
+    class MyFactory extends Factory {}
+    await expect(MyFactory.create()).rejects.toThrow()
+})
+
+test('if factories throws error when persist method is not implemented.', async () => {
+    class MyFactory extends Factory {
+        static async make() {
+            return {}
+        }
+    }
+    await expect(MyFactory.create()).rejects.toThrow()
+})

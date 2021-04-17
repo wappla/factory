@@ -1,4 +1,4 @@
-# Dashdot Graphql Server
+# Dashdot Factory
 
 A simple factory implementation for any persistance.
 

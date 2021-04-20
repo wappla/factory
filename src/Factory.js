@@ -7,7 +7,7 @@ export default class Factory {
             })
     }
 
-    static async compose(records = 1, states, data) {
+    static async compose(records = 1, states = [], data = {}) {
         let finalRecords = records
         if (Number.isInteger(finalRecords)) {
             finalRecords = Array.from({ length: records }, () => ({}))

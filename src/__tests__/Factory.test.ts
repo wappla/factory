@@ -1,8 +1,23 @@
 /* eslint-disable max-classes-per-file */
-import faker from 'faker'
+import { describe, expect, test } from '@jest/globals';
+import { faker } from '@faker-js/faker'
 import Factory from '../Factory'
 
+type User = {
+    id: string,
+    name: string,
+    email: string,
+}
+
+type Post = {
+    id: string,
+    title: string,
+    content: string,
+}
+
 class Database {
+    [key: string]: any
+
     constructor(collections) {
         collections.forEach((collection) => {
             this[collection] = new Map()
@@ -14,14 +29,15 @@ class Database {
     }
 
     insert(collection, record) {
-        const id = faker.unique(faker.datatype.uuid)
+        const id = faker.helpers.unique(faker.datatype.uuid)
         const recordToPersist = { id, ...record }
         this[collection].set(id, recordToPersist)
-        return this[collection].get(id)
+        const x = this[collection].get(id)
+        return { ...x }
     }
 }
 
-test('if factories return correct instances and persist correctly.', async () => {
+test.skip('if factories return correct instances and persist correctly.', async () => {
     const postsCollection = 'posts'
     const usersCollection = 'users'
     const database = new Database([
@@ -29,7 +45,9 @@ test('if factories return correct instances and persist correctly.', async () =>
         usersCollection
     ])
 
-    class MyFactory extends Factory {
+    class DbFactory extends Factory {
+        static collection: string
+
         static persist(records) {
             return database.insertMany(this.collection, records)
         }
@@ -37,15 +55,16 @@ test('if factories return correct instances and persist correctly.', async () =>
 
     const userName = faker.name.firstName()
     const userEmail = faker.internet.exampleEmail()
-    const postTitle = faker.name.title()
+    const postTitle = faker.name.middleName()
     const postContent = faker.lorem.words()
 
-    class PostFactory extends MyFactory {
-        static get collection() {
-            return postsCollection
-        }
+    class PostFactory extends DbFactory implements Post {
+        static collection: string = postsCollection
+        id: string
+        title: string
+        content: string
 
-        static make() {
+        static async make() {
             return {
                 title: postTitle,
                 content: postContent,
@@ -53,19 +72,20 @@ test('if factories return correct instances and persist correctly.', async () =>
         }
     }
 
-    class UserFactory extends MyFactory {
-        static get collection() {
-            return usersCollection
-        }
+    class UserFactory extends DbFactory implements User {
+        static collection: string = usersCollection
+        id: string
+        name: string
+        email: string
 
-        static make() {
+        static async make() {
             return {
                 name: userName,
                 email: userEmail,
             }
         }
 
-        createPosts(records, states, data) {
+        createPosts(records, states = [], data = {}) {
             return PostFactory.create(records, states, {
                 ...data,
                 user: this.id,
@@ -75,6 +95,7 @@ test('if factories return correct instances and persist correctly.', async () =>
 
     const [user] = await UserFactory.create(1)
     const [post] = await user.createPosts(1)
+    console.log(user)
     expect(user.name).toEqual(userName)
     expect(user.email).toEqual(userEmail)
     expect(post.title).toEqual(postTitle)

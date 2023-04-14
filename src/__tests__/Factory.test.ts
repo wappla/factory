@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import { describe, expect, test } from '@jest/globals';
+import { expect, test } from '@jest/globals';
 import { faker } from '@faker-js/faker'
 import Factory from '../Factory'
 
@@ -37,7 +37,7 @@ class Database {
     }
 }
 
-test.skip('if factories return correct instances and persist correctly.', async () => {
+test('if factories return correct instances and persist correctly.', async () => {
     const postsCollection = 'posts'
     const usersCollection = 'users'
     const database = new Database([
@@ -95,7 +95,6 @@ test.skip('if factories return correct instances and persist correctly.', async 
 
     const [user] = await UserFactory.create(1)
     const [post] = await user.createPosts(1)
-    console.log(user)
     expect(user.name).toEqual(userName)
     expect(user.email).toEqual(userEmail)
     expect(post.title).toEqual(postTitle)
